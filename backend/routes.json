@@ -1,0 +1,52 @@
+{
+  "render": {
+    "oveSpace": "http://localhost:3004/space-info",
+    "canvas": {
+      "layout": {
+        "type": "static"
+      },
+      "sections": [
+        {
+          "name": "section1",
+          "type": "section",
+          "positionConstraints": {
+            "x": 0,
+            "y": 0,
+            "w": 100,
+            "h": 100
+          },
+          "app": {},
+          "geometry": {
+            "x": 0,
+            "y": 0,
+            "w": 100,
+            "h": 100
+          }
+        },
+        {
+          "name": "section2",
+          "type": "section",
+          "positionConstraints": {
+            "x": 100,
+            "y": 0,
+            "w": 100,
+            "h": 100
+          },
+          "app": {},
+          "geometry": {
+            "x": 100,
+            "y": 0,
+            "w": 100,
+            "h": 100
+          }
+        }
+      ],
+      "geometry": {
+        "x": 0,
+        "y": 0,
+        "w": 30720,
+        "h": 4320
+      }
+    }
+  }
+}
