@@ -1,16 +1,16 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import {Alert} from 'react-bootstrap'
+import { Alert } from 'react-bootstrap'
 
 class CloseableAlert extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {show: true};
+        this.state = { show: true };
     }
 
     handleClose() {
-        this.setState({show: false});
+        this.setState({ show: false });
         this.props.onDismiss(this.props.id);
     }
 

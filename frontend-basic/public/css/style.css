@@ -2,3 +2,13 @@
     margin: 5px;
     cursor: pointer;
 }
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.startup-container {
+    width: 800px;
+    margin: auto;
+    margin-top: 10px;
+}
