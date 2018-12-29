@@ -2,16 +2,15 @@ import 'react-table/react-table.css'
 
 import React from 'react'
 import PropTypes from 'prop-types'
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
+import { Redirect } from 'react-router'
 
-import {Badge} from 'react-bootstrap'
+import { Badge } from 'react-bootstrap'
 import ReactTable from 'react-table'
 
 import _ from 'underscore'
 
-import {initOveState} from '../reducers/backendActions'
-
-const JsonCell = ({value}) => <>
+const JsonCell = ({ value }) => <>
     {_.map(value, (v, k) => <><Badge variant="secondary">{k}</Badge>&nbsp;{v}&nbsp;&nbsp;</>)}
 </>;
 
@@ -44,36 +43,31 @@ const columns = [
     }
 ];
 
-class DesignerPage extends React.Component {
-    componentDidMount() {
-        this.props.onMount()
-    }
-
-    render() {
-        let {canvas} = this.props;
-        if (canvas) {
-            return <ReactTable data={canvas.sections} columns={columns} defaultPageSize={10}
-                               className='table-striped table'/>
+const DesignerPage = ({ canvas, isLoading }) => {
+    if (canvas || isLoading) {
+        if (isLoading) {
+            // todo; add a nice loader
+            return null;
         }
-        return null;
+        return <ReactTable data={canvas.sections} columns={columns} defaultPageSize={10}
+            className='table-striped table' />
+    } else {
+        console.log("canvas not found")
+        // canvas is not yet initialised
+        return <Redirect to="/" />
     }
 }
 
 DesignerPage.propTypes = {
     isLoading: PropTypes.bool,
-    canvas: PropTypes.object,
-    onMount: PropTypes.func.isRequired
+    canvas: PropTypes.object
 };
 
 const mapStateToProps = (state) => {
     return {
         isLoading: state.oveState.isFetching,
-        canvas: state.oveState.state.canvas
+        canvas: state.oveState.project.canvas
     }
 };
 
-const mapDispatchToProps = (dispatch) => {
-    return {onMount: () => dispatch(initOveState())}
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(DesignerPage)
+export default connect(mapStateToProps, null)(DesignerPage)

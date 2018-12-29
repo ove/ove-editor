@@ -2,93 +2,88 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
-import { Badge, Button, Card, Container, Row, Col, Modal } from 'react-bootstrap'
-import { createOveProject } from '../../reducers/oveStateActions';
+import _ from 'underscore'
 
-const NewProjectModal = ({ show, onHide, createOveProject }) => <Modal show={show} onHide={onHide} size="lg">
-    <Modal.Header closeButton>
-        <Modal.Title>Create new project</Modal.Title>
-    </Modal.Header>
+import { Badge, Button, Form, Modal } from 'react-bootstrap'
+import TemplateDeck from '../../components/TemplateDeck'
 
-    <Modal.Body>
-        <Container>
-            <Row>
-                <Col xs={12} md={4}>
-                    <Card style={{ height: 400 }}>
-                        <Card.Img variant="top" src="https://via.placeholder.com/200x100?text=Gallery+Project" />
-                        <Card.Body>
-                            <Card.Title>Gallery Project</Card.Title>
-                            <Card.Text>
-                                This will generate a project from multiple images (assets) displayed one by one on the observatory.
-                            </Card.Text>
-                        </Card.Body>
-                        <Card.Footer>
-                            <Button variant="primary" onClick={() => { createOveProject({ gallery: true, cols: 1, rows: 1 }) }}>Create</Button>
-                        </Card.Footer>
-                    </Card>
-                </Col>
-                <Col xs={12} md={4}>
-                    <Card style={{ height: 400 }}>
-                        <Card.Img variant="top" src="https://via.placeholder.com/200x100?text=Single+Page+Project" />
-                        <Card.Body>
-                            <Card.Title>Full screen single section project</Card.Title>
-                            <Card.Text>
-                                This will generate a project from a single asset displayed as a single section on the observatory.
-                            </Card.Text>
-                        </Card.Body>
-                        <Card.Footer>
-                            <Button variant="primary">Create</Button>
-                        </Card.Footer>
-                    </Card>
-                </Col>
-                <Col xs={12} md={4}>
-                    <Card style={{ height: 400 }}>
-                        <Card.Img variant="top" src="https://via.placeholder.com/200x100?text=5+cols+x+1+row" />
-                        <Card.Body>
-                            <Card.Title>Five section project</Card.Title>
-                            <Card.Text>
-                                This will generate a project from a 5 assets displayed as multiple sections on the observatory.
-                            </Card.Text>
-                        </Card.Body>
-                        <Card.Footer>
-                            <Button variant="primary">Create</Button>
-                        </Card.Footer>
-                    </Card>
-                </Col>
-            </Row>
-            <Row style={{ marginTop: 20 }}>
-                <Col xs={12} md={4}>
-                    <Card style={{ height: 400 }}>
-                        <Card.Img variant="top" src="https://via.placeholder.com/200x100?text=4+cols+x+1+row" />
-                        <Card.Body>
-                            <Card.Title>Four section project</Card.Title>
-                            <Card.Text>
-                                This will generate a project from multiple images (assets) displayed as 4 sections.
-                            </Card.Text>
-                        </Card.Body>
-                        <Card.Footer>
-                            <Button variant="primary">Create</Button>
-                        </Card.Footer>
-                    </Card>
-                </Col>
-                <Col xs={12} md={4}>
-                    <Card style={{ height: 400 }}>
-                        <Card.Img variant="top" src="https://via.placeholder.com/200x100?text=4+cols+x+2+rows" />
-                        <Card.Body>
-                            <Card.Title>Four section project over two columns</Card.Title>
-                            <Card.Text>
-                                This will generate a project from multiple images (assets) displayed as 8 sections, 2 rows by 4 columns.
-                            </Card.Text>
-                        </Card.Body>
-                        <Card.Footer>
-                            <Button variant="primary">Create</Button>
-                        </Card.Footer>
-                    </Card>
-                </Col>
-            </Row>
-        </Container>
-    </Modal.Body>
-</Modal>;
+import projectTemplates from '../../data/templates/projectTemplates'
+import { createOveProjectFromTemplate } from '../../reducers/uiActions';
+
+class NewProjectModal extends React.Component {
+    constructor() {
+        super();
+
+        this.state = {
+            name: "",
+            selectedTemplate: "",
+            errors: { name: false, selectedTemplate: true }
+        }
+    }
+
+    handleTemplateSelection(value) {
+        if (value === this.state.selectedTemplate) {
+            this.setState({ selectedTemplate: "", errors: { ...this.state.errors, selectedTemplate: true } })
+        } else {
+            this.setState({ selectedTemplate: value, errors: { ...this.state.errors, selectedTemplate: true } })
+        }
+    }
+
+    handleNameChange(evt) {
+        this.setState({ name: evt.target.value, errors: { ...this.state.errors, name: null } })
+    }
+
+    validate() {
+        let result = true;
+        let errors = { name: false, selectedTemplate: true };
+        if (_.isEmpty(this.state.name)) {
+            errors.name = true;
+            result = false;
+        }
+        if (_.isEmpty(this.state.selectedTemplate)) {
+            errors.selectedTemplate = false;
+            result = false;
+        }
+        this.setState({ errors });
+        return result;
+    }
+
+    createProject() {
+        let { createOveProject } = this.props;
+        if (this.validate()) {
+            let selectedTemplate = _.find(projectTemplates, e => e.id === this.state.selectedTemplate).projectTemplate;
+            createOveProject(this.state.name, selectedTemplate);
+        }
+    }
+
+    render() {
+        let { show, onHide } = this.props;
+        let { name, selectedTemplate } = this.state;
+
+        let handleTemplateSelection = this.handleTemplateSelection.bind(this);
+        let handleNameChange = this.handleNameChange.bind(this);
+        let createProject = this.createProject.bind(this);
+
+        return <Modal show={show} onHide={onHide} size="lg">
+            <Modal.Header closeButton>
+                <Modal.Title>Create new project</Modal.Title>
+            </Modal.Header>
+
+            <Modal.Body>
+                <Form.Group>
+                    <Form.Control type="text" placeholder="Project Name" name="project-name" value={name}
+                        onChange={handleNameChange} isInvalid={this.state.errors.name} />
+                    <Form.Control.Feedback type="invalid">Please provide a project name</Form.Control.Feedback>
+                </Form.Group>
+                <TemplateDeck templates={projectTemplates} selectedState={selectedTemplate}
+                    onSelect={handleTemplateSelection} isValid={this.state.errors.selectedTemplate} />
+            </Modal.Body>
+            <Modal.Footer>
+                <Button variant="primary" onClick={() => createProject()}>Create</Button>
+            </Modal.Footer>
+        </Modal>
+    }
+}
 
 NewProjectModal.propTypes = {
     show: PropTypes.bool,
@@ -107,8 +102,10 @@ class NewProjectComponent extends React.Component {
         let createOveProject = this.props.createOveProject;
 
         return <>
-            <NewProjectModal show={this.state.expanded} onHide={() => { self.setState({ expanded: false }); }} createOveProject={createOveProject} />
-            <Button variant="light" size="lg" block style={{ border: '1px solid darkgray' }} onClick={() => { self.setState({ expanded: true }); }}>
+            <NewProjectModal show={this.state.expanded} onHide={() => { self.setState({ expanded: false }); }}
+                createOveProject={createOveProject} />
+            <Button variant="light" size="lg" block style={{ border: '1px solid darkgray' }}
+                onClick={() => { self.setState({ expanded: true }); }}>
                 Create <Badge variant="primary">new</Badge> project
             </Button>
         </>
@@ -120,7 +117,7 @@ NewProjectComponent.propTypes = {
 };
 
 const mapDispatchToProps = (dispatch) => {
-    return { createOveProject: (params) => dispatch(createOveProject(params)) }
+    return { createOveProject: (name, template) => createOveProjectFromTemplate(dispatch, name, template) }
 };
 
 export default connect(null, mapDispatchToProps)(NewProjectComponent);
