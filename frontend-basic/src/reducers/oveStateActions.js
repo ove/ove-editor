@@ -18,6 +18,6 @@ export function receiveOveState(projectId, data) {
 
 export const CREATE_OVE_PROJECT = 'CREATE_OVE_PROJECT';
 
-export function createOveProject({ gallery, cols, rows }) {
-    return { type: CREATE_OVE_PROJECT, gallery, cols, rows }
+export function createOveProject(name, template) {
+    return { type: CREATE_OVE_PROJECT, name, template }
 }

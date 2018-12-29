@@ -1,12 +1,14 @@
 import React from 'react';
-import {render} from 'react-dom'
+import { render } from 'react-dom'
 
 import App from './pages/App'
 
-import {setupStore} from './reducers/util'
-import {setupRestBackend} from './backend/fetchClient'
-import {backendRestUrl, browserInfo} from './data/config'
+import { setupStore } from './reducers/util'
+import { setupRestBackend } from './backend/fetchClient'
+import { backendRestUrl, browserInfo } from './data/config'
 
 browserInfo();
 setupRestBackend(backendRestUrl());
-render(<App store={setupStore()}/>, document.getElementById('app'));
+const { store, history } = setupStore();
+
+render(<App store={store} history={history} />, document.getElementById('app'));

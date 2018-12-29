@@ -1,4 +1,6 @@
-import { combineReducers } from 'redux';
+import { combineReducers } from 'redux'
+import { connectRouter } from 'connected-react-router'
+
 import _ from 'underscore'
 
 import { ADD_ALERT, DISMISS_ALERT, DISMISS_ALL_ALERTS, TOGGLE_ALERTS } from "./alertActions";
@@ -32,16 +34,12 @@ function oveState(state = DEFAULT_OVE_STATE, action) {
             return Object.assign({}, state, {
                 isFetching: false,
                 didInvalidate: false,
-                project: createDefaultProject(action.gallery, action.cols, action.rows)
+                projectId: action.name,
+                project: action.template
             });
         default:
             return state
     }
-}
-
-function createDefaultProject(gallery, cols, rows) {
-    //todo; implement this
-    return {}
 }
 
 function alerts(state = { expanded: false, items: [] }, action) {
@@ -62,4 +60,8 @@ function alerts(state = { expanded: false, items: [] }, action) {
     }
 }
 
-export default combineReducers({ oveState, alerts })
+export default (history) => combineReducers({
+    router: connectRouter(history),
+    oveState,
+    alerts
+})
