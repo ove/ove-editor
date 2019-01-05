@@ -13,7 +13,7 @@
     "bootstrap": "4.2.1",
     "connected-react-router": "6.1.0",
     "cross-fetch": "3.0.0",
-    "detect-browser": "3.0.1",
+    "detect-browser": "4.0.0",
     "prop-types": "latest",
     "react": "16.7.0",
     "react-bootstrap": "1.0.0-beta.3",
