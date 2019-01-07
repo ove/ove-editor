@@ -15,7 +15,7 @@ export function backendRestUrl() {
 }
 
 export function browserInfo() {
-    const {detect} = require('detect-browser');
+    const { detect } = require('detect-browser');
     const browser = detect();
     if (browser) {
         console.log("Browser Name:", browser.name);

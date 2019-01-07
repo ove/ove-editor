@@ -11,7 +11,7 @@ import ReactTable from 'react-table'
 import _ from 'underscore'
 
 const JsonCell = ({ value }) => <>
-    {_.map(value, (v, k) => <><Badge variant="secondary">{k}</Badge>&nbsp;{v}&nbsp;&nbsp;</>)}
+    {_.map(value, (v, k) => <span key={k + "_" + v}><Badge variant="secondary">{k}</Badge>&nbsp;{v}&nbsp;&nbsp;</span>)}
 </>;
 
 JsonCell.propTypes = {
@@ -43,14 +43,17 @@ const columns = [
     }
 ];
 
-const DesignerPage = ({ canvas, isLoading }) => {
-    if (canvas || isLoading) {
+const DesignerPage = ({ projectId, project, isLoading }) => {
+    if (project.canvas || isLoading) {
         if (isLoading) {
             // todo; add a nice loader
             return null;
         }
-        return <ReactTable data={canvas.sections} columns={columns} defaultPageSize={10}
-            className='table-striped table' />
+        return <div>
+            <h2>Project: {projectId}</h2>
+            <ReactTable data={project.canvas.sections} columns={columns} defaultPageSize={10}
+                className='table-striped table' />
+        </div>
     } else {
         console.log("canvas not found")
         // canvas is not yet initialised
@@ -60,13 +63,15 @@ const DesignerPage = ({ canvas, isLoading }) => {
 
 DesignerPage.propTypes = {
     isLoading: PropTypes.bool,
-    canvas: PropTypes.object
+    projectId: PropTypes.string,
+    project: PropTypes.object,
 };
 
 const mapStateToProps = (state) => {
     return {
         isLoading: state.oveState.isFetching,
-        canvas: state.oveState.project.canvas
+        projectId: state.oveState.projectId,
+        project: state.oveState.project
     }
 };
 

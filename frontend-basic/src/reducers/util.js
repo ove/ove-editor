@@ -4,6 +4,9 @@ import { applyMiddleware, compose, createStore } from 'redux'
 import { createLogger } from 'redux-logger'
 import thunkMiddleware from 'redux-thunk'
 
+import { persistStore, persistReducer } from 'redux-persist'
+import storage from 'redux-persist/lib/storage'
+
 import { shouldLog } from '../data/config'
 import createRootReducer from './reducers'
 
@@ -13,5 +16,12 @@ export function setupStore() {
     if (shouldLog()) {
         middleware.push(createLogger())
     }
-    return { store: createStore(createRootReducer(history), compose(applyMiddleware(...middleware))), history }
+
+    const rootReducer = createRootReducer(history);
+    const persistedReducer = persistReducer({ key: 'root', storage }, rootReducer);
+
+    let store = createStore(persistedReducer, compose(applyMiddleware(...middleware)));
+    let persistor = persistStore(store);
+
+    return { store, history, persistor }
 }
