@@ -11,7 +11,7 @@
     "@fortawesome/react-fontawesome": "0.1.4",
     "@stomp/stompjs": "5.2.0",
     "bootstrap": "4.2.1",
-    "connected-react-router": "6.2.1",
+    "connected-react-router": "6.2.2",
     "cross-fetch": "3.0.0",
     "detect-browser": "4.0.3",
     "prop-types": "latest",
