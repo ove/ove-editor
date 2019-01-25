@@ -16,7 +16,7 @@
     "detect-browser": "4.0.4",
     "prop-types": "latest",
     "react": "16.7.0",
-    "react-bootstrap": "1.0.0-beta.4",
+    "react-bootstrap": "1.0.0-beta.5",
     "react-dom": "16.7.0",
     "react-redux": "6.0.0",
     "react-router-dom": "4.3.1",
