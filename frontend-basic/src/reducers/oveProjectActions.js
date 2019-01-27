@@ -33,9 +33,3 @@ export const RECEIVE_OVE_PROJECT = 'RECEIVE_OVE_PROJECT';
 export function receiveOveProject(projectId, data) {
     return { type: RECEIVE_OVE_PROJECT, projectId, data }
 }
-
-export const CREATE_OVE_PROJECT = 'CREATE_OVE_PROJECT';
-
-export function createOveProject(projectId, template) {
-    return { type: CREATE_OVE_PROJECT, projectId, template }
-}

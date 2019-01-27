@@ -1,5 +1,5 @@
 import { ALERT_DANGER, ALERT_SUCCESS } from '../data/alertType'
-import { OVE_GET_PROJECT_ROUTE, OVE_GET_PROJECT_LIST_ROUTE, OVE_VALIDATE_PROJECT_ROUTE } from '../backend/backendRoutes'
+import { OVE_PROJECT_FILE_ROUTE, OVE_GET_PROJECT_LIST_ROUTE, OVE_VALIDATE_PROJECT_ROUTE, OVE_CREATE_PROJECT_ROUTE } from '../backend/backendRoutes'
 
 import { addAlert } from './alertActions'
 import { restBackend, body } from '../backend/fetchClient'
@@ -8,7 +8,7 @@ import { receiveOveProject, requestOveProject, receiveOveProjectList, requestOve
 function fetchOveProject(projectId) {
     return (dispatch) => {
         dispatch(requestOveProject());
-        restBackend().GET(OVE_GET_PROJECT_ROUTE(projectId)).then(json => {
+        restBackend().GET(OVE_PROJECT_FILE_ROUTE(projectId)).then(json => {
             dispatch(receiveOveProject(projectId, json));
             dispatch(addAlert(ALERT_SUCCESS, 'Project loaded ...'));
         }).catch(error => {
@@ -65,7 +65,6 @@ function shouldFetchOveProjectList(state) {
 
 export function fetchOveProjectListIfNeeded() {
     return (dispatch, getState) => {
-        console.log("SHould I fetch?", getState())
         if (shouldFetchOveProjectList(getState())) {
             return dispatch(fetchOveProjectList());
         } else {
@@ -74,6 +73,20 @@ export function fetchOveProjectListIfNeeded() {
     }
 }
 
-export function validateProjectName(projectId) {
+export function validateOveProjectName(projectId) {
     return restBackend().POST(OVE_VALIDATE_PROJECT_ROUTE(), body({ name: projectId }));
+}
+
+function createProjectFolder(dispatch, projectId) {
+    return restBackend().POST(OVE_CREATE_PROJECT_ROUTE(), body({ name: projectId }))
+        .catch(() => dispatch(addAlert(ALERT_DANGER, "Unable to create project due to a server error")));
+}
+
+export function updateOveProject(dispatch, projectId, model) {
+    return restBackend().POST(OVE_PROJECT_FILE_ROUTE(projectId), body(model))
+        .catch(() => dispatch(addAlert(ALERT_DANGER, "Unable to upload project due to a server error")));
+}
+
+export function createOveProject(dispatch, projectId, template) {
+    return createProjectFolder(dispatch, projectId).then(updateOveProject(dispatch, projectId, template));
 }

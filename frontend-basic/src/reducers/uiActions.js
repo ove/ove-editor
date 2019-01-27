@@ -1,12 +1,10 @@
 import { push } from "connected-react-router"
 
-import { createOveProject, invalidateOveProject, invalidateOveProjectList } from "./oveProjectActions"
-import { fetchOveProjectIfNeeded, fetchOveProjectListIfNeeded } from "./backendActions"
+import { invalidateOveProject, invalidateOveProjectList } from "./oveProjectActions"
+import { createOveProject, fetchOveProjectIfNeeded, fetchOveProjectListIfNeeded } from "./backendActions"
 
 export function createOveProjectFromTemplate(dispatch, name, template) {
-    dispatch(invalidateOveProject());
-    dispatch(createOveProject(name, template));
-    dispatch(push("/designer"));
+    createOveProject(dispatch, name, template).then(() => loadOveProject(dispatch, name));
 }
 
 export function loadOveProjectList(dispatch) {
@@ -17,5 +15,4 @@ export function loadOveProjectList(dispatch) {
 export function loadOveProject(dispatch, projectId) {
     dispatch(invalidateOveProject());
     dispatch(fetchOveProjectIfNeeded(projectId));
-    dispatch(push("/designer"));
 }

@@ -10,7 +10,7 @@ import TemplateDeck from '../../components/TemplateDeck'
 import projectTemplates from '../../data/templates/projectTemplates'
 import { createOveProjectFromTemplate } from '../../reducers/uiActions'
 
-import { validateProjectName } from '../../reducers/backendActions'
+import { validateOveProjectName } from '../../reducers/backendActions'
 
 class NewProjectModal extends React.Component {
     constructor() {
@@ -50,7 +50,7 @@ class NewProjectModal extends React.Component {
             if (_.isEmpty(self.state.name)) {
                 reject({ name: "The project name can't be empty" });
             } else {
-                validateProjectName(self.state.name)
+                validateOveProjectName(self.state.name)
                     .then(() => resolve(true))
                     .catch(error => reject({ name: error.title }));
             }
@@ -65,7 +65,6 @@ class NewProjectModal extends React.Component {
             let selectedTemplate = _.find(projectTemplates, e => e.id === this.state.selectedTemplate).projectTemplate;
             createOveProject(this.state.name, selectedTemplate);
         }).catch((errors) => {
-            console.log("validation errors", errors)
             this.setState({ errors });
         })
     }
