@@ -7,7 +7,7 @@ export function backendRestUrl() {
     let location = window.location;
     let port = '';
     if (process.env.NODE_ENV === 'development') {
-        port = ':3004'
+        port = ':8080'
     } else {
         port = location.port ? ':' + location.port : ''
     }

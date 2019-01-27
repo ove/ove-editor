@@ -8,7 +8,9 @@ import { Badge, Button, Form, Modal } from 'react-bootstrap'
 import TemplateDeck from '../../components/TemplateDeck'
 
 import projectTemplates from '../../data/templates/projectTemplates'
-import { createOveProjectFromTemplate } from '../../reducers/uiActions';
+import { createOveProjectFromTemplate } from '../../reducers/uiActions'
+
+import { validateProjectName } from '../../reducers/backendActions'
 
 class NewProjectModal extends React.Component {
     constructor() {
@@ -17,15 +19,15 @@ class NewProjectModal extends React.Component {
         this.state = {
             name: "",
             selectedTemplate: "",
-            errors: { name: false, selectedTemplate: true }
+            errors: { name: null, selectedTemplate: null }
         }
     }
 
     handleTemplateSelection(value) {
         if (value === this.state.selectedTemplate) {
-            this.setState({ selectedTemplate: "", errors: { ...this.state.errors, selectedTemplate: true } })
+            this.setState({ selectedTemplate: "", errors: { ...this.state.errors, selectedTemplate: null } })
         } else {
-            this.setState({ selectedTemplate: value, errors: { ...this.state.errors, selectedTemplate: true } })
+            this.setState({ selectedTemplate: value, errors: { ...this.state.errors, selectedTemplate: null } })
         }
     }
 
@@ -34,26 +36,38 @@ class NewProjectModal extends React.Component {
     }
 
     validate() {
-        let result = true;
-        let errors = { name: false, selectedTemplate: true };
-        if (_.isEmpty(this.state.name)) {
-            errors.name = true;
-            result = false;
-        }
-        if (_.isEmpty(this.state.selectedTemplate)) {
-            errors.selectedTemplate = false;
-            result = false;
-        }
-        this.setState({ errors });
-        return result;
+        let self = this;
+
+        let templateValidation = new Promise((resolve, reject) => {
+            if (_.isEmpty(self.state.selectedTemplate)) {
+                reject({ selectedTemplate: "Please select at least one template" })
+            } else {
+                resolve(true);
+            }
+        });
+
+        let nameValidation = new Promise((resolve, reject) => {
+            if (_.isEmpty(self.state.name)) {
+                reject({ name: "The project name can't be empty" });
+            } else {
+                validateProjectName(self.state.name)
+                    .then(() => resolve(true))
+                    .catch(error => reject({ name: error.title }));
+            }
+        });
+
+        return Promise.all([nameValidation, templateValidation]);
     }
 
     createProject() {
         let { createOveProject } = this.props;
-        if (this.validate()) {
+        this.validate().then(() => {
             let selectedTemplate = _.find(projectTemplates, e => e.id === this.state.selectedTemplate).projectTemplate;
             createOveProject(this.state.name, selectedTemplate);
-        }
+        }).catch((errors) => {
+            console.log("validation errors", errors)
+            this.setState({ errors });
+        })
     }
 
     render() {
@@ -72,11 +86,11 @@ class NewProjectModal extends React.Component {
             <Modal.Body>
                 <Form.Group>
                     <Form.Control type="text" placeholder="Project Name" name="project-name" value={name}
-                        onChange={handleNameChange} isInvalid={this.state.errors.name} />
-                    <Form.Control.Feedback type="invalid">Please provide a project name</Form.Control.Feedback>
+                        onChange={handleNameChange} isInvalid={!_.isEmpty(this.state.errors.name)} />
+                    <Form.Control.Feedback type="invalid">{this.state.errors.name}</Form.Control.Feedback>
                 </Form.Group>
                 <TemplateDeck templates={projectTemplates} selectedState={selectedTemplate}
-                    onSelect={handleTemplateSelection} isValid={this.state.errors.selectedTemplate} />
+                    onSelect={handleTemplateSelection} error={this.state.errors.selectedTemplate} />
             </Modal.Body>
             <Modal.Footer>
                 <Button variant="primary" onClick={() => createProject()}>Create</Button>

@@ -1,25 +1,25 @@
-import {ALERT_DANGER, ALERT_SUCCESS} from '../data/alertType'
-import {OVE_STATE_ROUTE} from '../backend/backendRoutes'
+import { ALERT_DANGER, ALERT_SUCCESS } from '../data/alertType'
+import { OVE_GET_PROJECT_ROUTE, OVE_GET_PROJECT_LIST_ROUTE, OVE_VALIDATE_PROJECT_ROUTE } from '../backend/backendRoutes'
 
-import {addAlert} from './alertActions'
-import {restBackend} from '../backend/fetchClient'
-import {receiveOveState, requestOveState} from './oveStateActions'
+import { addAlert } from './alertActions'
+import { restBackend, body } from '../backend/fetchClient'
+import { receiveOveProject, requestOveProject, receiveOveProjectList, requestOveProjectList } from './oveProjectActions'
 
-function fetchOveState(projectId = null) {
+function fetchOveProject(projectId) {
     return (dispatch) => {
-        dispatch(requestOveState());
-        restBackend().GET(OVE_STATE_ROUTE).then(json => {
-            dispatch(receiveOveState(projectId, json));
+        dispatch(requestOveProject());
+        restBackend().GET(OVE_GET_PROJECT_ROUTE(projectId)).then(json => {
+            dispatch(receiveOveProject(projectId, json));
             dispatch(addAlert(ALERT_SUCCESS, 'Project loaded ...'));
         }).catch(error => {
-            dispatch(receiveOveState(projectId, {}));
+            dispatch(receiveOveProject(projectId, {}));
             dispatch(addAlert(ALERT_DANGER, String(error)));
         });
     }
 }
 
-function shouldFetchOveState(state, projectId = null) {
-    const oveState = state.oveState;
+function shouldFetchOveProject(state, projectId) {
+    const oveState = state.oveCurrentProject;
     if (!oveState) {
         return true
     } else if (oveState.isFetching) {
@@ -29,19 +29,51 @@ function shouldFetchOveState(state, projectId = null) {
     }
 }
 
-export function fetchTOveStateIfNeeded(projectId = null) {
+export function fetchOveProjectIfNeeded(projectId) {
     return (dispatch, getState) => {
-        if (shouldFetchOveState(getState(), projectId)) {
-            return dispatch(fetchOveState(projectId));
+        if (shouldFetchOveProject(getState(), projectId)) {
+            return dispatch(fetchOveProject(projectId));
         } else {
             return Promise.resolve()
         }
     }
 }
 
-export function initOveState() {
+function fetchOveProjectList() {
     return (dispatch) => {
-        console.log("Init Ove state");
-        return dispatch(fetchTOveStateIfNeeded(null));
+        dispatch(requestOveProjectList());
+        restBackend().GET(OVE_GET_PROJECT_LIST_ROUTE()).then(json => {
+            dispatch(receiveOveProjectList(json['Projects']));
+            dispatch(addAlert(ALERT_SUCCESS, 'Project list loaded ...'));
+        }).catch(error => {
+            dispatch(receiveOveProjectList([]));
+            dispatch(addAlert(ALERT_DANGER, String(error)));
+        });
     }
+}
+
+function shouldFetchOveProjectList(state) {
+    const oveState = state.oveProjectList;
+    if (!oveState) {
+        return true
+    } else if (oveState.isFetching) {
+        return false
+    } else {
+        return oveState.didInvalidate
+    }
+}
+
+export function fetchOveProjectListIfNeeded() {
+    return (dispatch, getState) => {
+        console.log("SHould I fetch?", getState())
+        if (shouldFetchOveProjectList(getState())) {
+            return dispatch(fetchOveProjectList());
+        } else {
+            return Promise.resolve()
+        }
+    }
+}
+
+export function validateProjectName(projectId) {
+    return restBackend().POST(OVE_VALIDATE_PROJECT_ROUTE(), body({ name: projectId }));
 }

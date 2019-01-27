@@ -3,10 +3,10 @@ import { connect } from 'react-redux'
 import { Redirect } from 'react-router'
 
 import { Container, Row, Col } from 'react-bootstrap'
-import { OpenProjectComponent } from '../containers/dialogue/OpenProjectModal';
+import OpenProjectComponent from '../containers/dialogue/OpenProjectModal';
 import NewProjectComponent from '../containers/dialogue/NewProjectModal';
 
-const MainPage = ({canvas}) => {
+const MainPage = ({ canvas }) => {
     if (canvas) {
         // canvas exists
         return <Redirect to="/designer" />
@@ -43,7 +43,7 @@ const MainPage = ({canvas}) => {
 
 const mapStateToProps = (state) => {
     return {
-        canvas: state.oveState.project.canvas
+        canvas: state.oveCurrentProject.project.canvas
     }
 };
 

@@ -21,3 +21,8 @@
     margin: auto;
     margin-top: 10px;
 }
+
+.overflow-list {
+    height: 400px;
+    overflow-y: scroll;
+}

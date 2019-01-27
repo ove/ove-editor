@@ -18,7 +18,7 @@ export function setupStore() {
     }
 
     const rootReducer = createRootReducer(history);
-    const persistedReducer = persistReducer({ key: 'root', storage }, rootReducer);
+    const persistedReducer = persistReducer({ key: 'root', storage, blacklist: ['alerts'] }, rootReducer);
 
     let store = createStore(persistedReducer, compose(applyMiddleware(...middleware)));
     let persistor = persistStore(store);

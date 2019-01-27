@@ -69,9 +69,9 @@ DesignerPage.propTypes = {
 
 const mapStateToProps = (state) => {
     return {
-        isLoading: state.oveState.isFetching,
-        projectId: state.oveState.projectId,
-        project: state.oveState.project
+        isLoading: state.oveCurrentProject.isFetching,
+        projectId: state.oveCurrentProject.projectId,
+        project: state.oveCurrentProject.project
     }
 };
 
