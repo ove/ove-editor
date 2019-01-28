@@ -11,7 +11,7 @@ import { loadOveProject, loadOveProjectList } from '../../reducers/uiActions'
 import Loader from '../../components/Loader';
 
 const OpenProjectModal = ({ show, onHide, projectList, loading, loadProject }) =>
-    <Modal show={show} onHide={onHide} size="lg">
+    <Modal show={show} onHide={onHide} size="lg" backdrop={false}>
         <Modal.Header closeButton>
             <Modal.Title>Open Project</Modal.Title>
         </Modal.Header>

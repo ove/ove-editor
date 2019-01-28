@@ -6,3 +6,5 @@ export const OVE_GET_PROJECT_LIST_ROUTE = () => `api/${DEFAULT_STORE_ID}/list?ha
 export const OVE_PROJECT_FILE_ROUTE = (projectId) => `api/${DEFAULT_STORE_ID}/${projectId}/object/${PROJECT_OBJECT_ID}`;
 export const OVE_VALIDATE_PROJECT_ROUTE = () => `api/${DEFAULT_STORE_ID}/validate`;
 export const OVE_CREATE_PROJECT_ROUTE = () => `api/${DEFAULT_STORE_ID}/create`;
+
+export const OVE_UPLOAD_ASSET_ROUTE = (projectId, assetId) => `api/${DEFAULT_STORE_ID}/${projectId}/createUpload/${assetId}`

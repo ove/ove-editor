@@ -1,5 +1,3 @@
-import { push } from "connected-react-router"
-
 import { invalidateOveProject, invalidateOveProjectList } from "./oveProjectActions"
 import { createOveProject, fetchOveProjectIfNeeded, fetchOveProjectListIfNeeded } from "./backendActions"
 

@@ -10,6 +10,8 @@ import ReactTable from 'react-table'
 
 import _ from 'underscore'
 
+import UploadComponent from '../containers/dialogue/UploadModal'
+
 const JsonCell = ({ value }) => <>
     {_.map(value, (v, k) => <span key={k + "_" + v}><Badge variant="secondary">{k}</Badge>&nbsp;{v}&nbsp;&nbsp;</span>)}
 </>;
@@ -17,6 +19,9 @@ const JsonCell = ({ value }) => <>
 JsonCell.propTypes = {
     value: PropTypes.object.isRequired
 };
+
+const FileUpload = ({ value }) =>
+    <UploadComponent />;
 
 const columns = [
     {
@@ -30,10 +35,10 @@ const columns = [
         id: 'type'
     },
     {
-        Header: 'Geometry',
-        accessor: 'geometry',
-        id: 'geometry',
-        Cell: JsonCell
+        Header: 'Asset',
+        accessor: 'asset',
+        id: 'asset',
+        Cell: FileUpload
     },
     {
         Header: 'Layout constraints',

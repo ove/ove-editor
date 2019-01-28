@@ -3,6 +3,11 @@
   "author": "Ovidiu Serban, o.serban@imperial.ac.uk",
   "version": "0.1.0",
   "license": "MIT",
+  "description": "The OVE Editor",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ove/ove-editor.git"
+  },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "1.2.12",
     "@fortawesome/free-brands-svg-icons": "5.6.3",
@@ -14,10 +19,14 @@
     "connected-react-router": "6.2.2",
     "cross-fetch": "3.0.0",
     "detect-browser": "4.0.4",
+    "filepond": "^3.7.6",
+    "jquery": "^3.3.1",
+    "popper.js": "^1.14.6",
     "prop-types": "latest",
     "react": "16.7.0",
     "react-bootstrap": "1.0.0-beta.5",
     "react-dom": "16.7.0",
+    "react-filepond": "^5.0.0",
     "react-redux": "6.0.0",
     "react-router-dom": "4.3.1",
     "react-spinners": "0.5.1",
@@ -31,6 +40,9 @@
   },
   "devDependencies": {
     "react-scripts": "2.1.3"
+  },
+  "optionalDependencies": {
+    "fsevents": "*"
   },
   "scripts": {
     "start": "react-scripts start",

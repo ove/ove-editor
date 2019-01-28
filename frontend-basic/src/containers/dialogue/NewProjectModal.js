@@ -77,7 +77,7 @@ class NewProjectModal extends React.Component {
         let handleNameChange = this.handleNameChange.bind(this);
         let createProject = this.createProject.bind(this);
 
-        return <Modal show={show} onHide={onHide} size="lg">
+        return <Modal show={show} onHide={onHide} size="lg" backdrop={false}>
             <Modal.Header closeButton>
                 <Modal.Title>Create new project</Modal.Title>
             </Modal.Header>
