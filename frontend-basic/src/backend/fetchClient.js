@@ -35,7 +35,7 @@ export class FetchClient {
 
         let url = this._baseUrl + requestUrl;
         if (options['queryParams']) {
-            url += (url.indexOf('?') === -1 ? '?' : '&') + queryParamsUrl(options['queryParams']);
+            url += (url.includes('?') ? '&' : '?') + queryParamsUrl(options['queryParams']);
             delete options['queryParams'];
         }
 
