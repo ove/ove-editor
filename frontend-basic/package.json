@@ -19,7 +19,7 @@
     "connected-react-router": "6.3.2",
     "cross-fetch": "3.0.2",
     "detect-browser": "4.4.0",
-    "filepond": "4.2.0",
+    "filepond": "4.4.0",
     "jquery": "3.4.0",
     "popper.js": "1.15.0",
     "prop-types": "latest",
