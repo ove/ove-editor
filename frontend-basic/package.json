@@ -21,7 +21,7 @@
     "detect-browser": "4.5.0",
     "filepond": "4.4.2",
     "jquery": "3.4.1",
-    "popper.js": "1.15.0",
+    "popper.js": "1.16.0",
     "prop-types": "latest",
     "react": "16.8.6",
     "react-bootstrap": "1.0.0-beta.8",
