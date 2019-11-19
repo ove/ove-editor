@@ -1,3 +1,5 @@
+⛔️ DEPRECATED This repository has been archived in favour of the [OVE UI](https://github.com/ove/ove-ui) and [OVE Asset Manager](https://github.com/ove/ove-asset-manager)
+
 # OVE IDE
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
